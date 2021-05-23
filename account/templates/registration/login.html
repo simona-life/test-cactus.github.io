@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Вхід в акаунт{% endblock %}
+
+{% block content %}
+     <h1>Увійдіть у акаунт</h1>
+
+     {% if form.errors %}
+         <p>Хм, не правильний пароль чи ім'я користувача/email. Спробуйте ще раз!</p>
+     {% else %}
+         <p>Будь ласка увійдіть у акаунт, або
+             <a href="{% url "register" %}">зареєструйтесь тут.</a>
+         </p>
+     {% endif %}
+
+     <div class="login-form">
+         <form action="{% url 'login' %}" method="post">
+             {{ form.as_p }}
+             {% csrf_token %}
+             <input type="hidden" name="next" value="{{ next }}" />
+             <p><input type="submit" value="Увійти"></p>
+         </form>
+     </div>
+
+    <div class="social">
+        <ul>
+            <li class="facebook"><a href="{% url "social:begin" "facebook" %}">SignIn with Facebook</a></li>
+            <li class="google"><a href="{% url "social:begin" "google-oauth2" %}">Login with Google </a></li>
+        </ul>
+    </div>
+
+    <p><a href="{% url "password_reset" %}">Забули пароль?</a></p>
+
+{% endblock %}

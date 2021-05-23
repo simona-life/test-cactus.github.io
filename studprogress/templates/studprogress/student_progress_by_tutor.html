@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Прогрес {{ progress|get_names_by_progress }}{% endblock %}
+
+{% block content %}
+    <div>
+        <p>{{ progress|get_names_by_progress }}</p>
+        <p>Номер телефону: <a href="tel:{{ progress.student_fk.profile.phone_number }}"></a>{{ progress.student_fk.profile.phone_number }}</p>
+    </div>
+
+    <div>
+        <p>Всього пройдено уроків: {{ progress|percent_passed_lessons }}%</p>
+        <p>Всього поінтів зароблено: {{ progress.points }}</p>
+    </div>
+
+    <div>
+        <h5>Курс: "{{ course.title }}"</h5>
+        <ul>
+            {% for topic in course.topics.all %}
+                <li>{{ topic.title }}</li>
+                    {#   Lessons topic:   #}
+                <ul>
+                    {% for lesson in topic.lessons.all %}
+                        <form action="." method="post">
+                            {% csrf_token %}
+
+                            {% if lesson.type_lesson == 'home_work' or lesson.type_lesson == 'control_work' %}
+                                <li><a href="{% url 'result_hw_lesson' sid=progress.student_fk.id lid=lesson.id %}">{{ lesson.title }}</a>
+                            {% else %}
+                                <li><a href="{% url 'lesson' cid=course.id lid=lesson.id %}">{{ lesson.title }}</a>
+                            {% endif %}
+
+                            <input type="hidden" value="{{ lesson.id }}" name="lesson">
+                            {% if progress|open_check_lesson:lesson.id %}
+                                <input type="submit" name="action" value="Закрити доступ">
+                            {% else %}
+                                <input type="submit" name="action" value="Відкрити доступ">
+                            {% endif %}</li>
+                        </form>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

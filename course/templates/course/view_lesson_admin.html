@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}{{ lesson.title }}{% endblock %
+{% block content %}
+    <h1>{{ lesson.title }}</h1>
+
+    <div>
+        <h2>{{ lesson.title }}</h2>
+        <p>id: {{ lesson.id }}</p>
+    </div>
+
+    {% for content in contents %}
+        {% if content.item|model_name == 'Text' %}
+            <p>{{content.item.title}}:{{content.item.text}}</p>
+            <p>
+        {% elif content.item|model_name == 'Image'%}
+            <p>
+            <img src="{{ content.item.file.url }}" width="189" height="255">
+        {% elif content.item|model_name == 'Video'%}
+            <p>
+            <video controls="controls">
+                <source src="{{ content.item.file.url }}" type="video/mp4">
+            </video>
+        {% elif content.item|model_name == 'File'%}
+            <p><a download href="{{ content.item.file.url }}">{{ content.item.title }} download</a>
+            <p><a href="{{ content.item.file.url }}">{{ content.item.title }} open</a>
+        {% endif %}
+
+    {% endfor %}
+
+
+
+      {#  done video #}
+{#    {% for video in videos %}#}
+{#        <video controls="controls">#}
+{#            <source src="{{ video.file.url }}" type="video/mp4">#}
+{#        </video>#}
+{#    {% endfor %}#}
+
+    {#  done  text #}
+{#    {% for text in texts %}#}
+{#        <p>{{text.content}}</p>#}
+{#    {% endfor %}#}
+
+    {#  done files  #}
+{#    {% for file_ in files %}#}
+{#        <p><a download href="{{ file_.file.url }}">{{ file_.title }} download</a>#}
+{#        <p><a href="{{ file_.file.url }}">{{ file_.title }} open</a>#}
+{#    {% endfor %}#}
+
+    {#  done  image #}
+{#    {% for image in images %}#}
+{#        <img src="{{ image.file.url }}" width="189" height="255">#}
+{#    {% endfor %}#}
+
+
+{% endblock %}

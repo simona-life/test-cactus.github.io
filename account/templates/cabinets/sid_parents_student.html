@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Інформація про Студента{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Інформація про Студента</h1>
+    </div>
+
+    <div>
+        <h4>{{ student.profile.user.first_name }} {{ student.profile.user.last_name }}</h4>
+    </div>
+
+    {% for progress in student.progresses  %}
+        <div>
+            <h5>Курс: "{{ progress.course_id|get_title_course_by_id }}"</h5>
+            <p>Дата завершення підписк: {{ progress.end_sub_date }}</p>
+            <p>Залишилось оплачених включних інивідуальних уроків: {{ progress.include_month_private_lessons_current }}</p>
+            <p>Залишилось оплачених додаткових інивідуальних уроків: {{ progress.qty_bought_private_lessons }}</p>
+            <p>Всього проведено індивідуальних уроків: {{ progress.qty_finished_private_lessons }}</p>
+            <p><a href="{% url 'student_progress_by_parent' cid=progress.course_id sid=progress.student_fk.id %}">Деталі</a></p>
+        </div>
+    {% endfor %}
+
+{% endblock %}

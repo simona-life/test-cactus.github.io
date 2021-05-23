@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}404 помилка{% endblock %}
+{% block content %}
+
+    <h1>404 помилка</h1>
+    <p>Вибачте, такої сторінки не існує :(
+    Але в нас є ще багато цікавого <a href="{% url 'all_courses'%}">тут</a>!</p>
+
+{% endblock %}

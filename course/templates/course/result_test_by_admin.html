@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Результати{% endblock %}
+
+{% block content %}
+    <h1>Урок: {{ lesson.id }}</h1>
+
+    <div>
+        <p>Урок: {{ lesson.title }}</p>
+        <p>Lesson id: {{ lesson.id }}</p>
+    </div>
+
+    <div>
+        <p>Результат: {{ user_total_points }}/{{ max_total_points }} </p>
+    </div>
+
+    <div>
+        {% for content in contents %}
+            {% if content.item|model_name == 'Text' %}
+                <p>{{content.item.title}}:{{content.item.text}}</p>
+                <p>
+            {% elif content.item|model_name == 'Image'%}
+                <p>
+                <img src="{{ content.item.file.url }}" width="189" height="255">
+            {% elif content.item|model_name == 'Video'%}
+                <p>
+                <video controls="controls">
+                    <source src="{{ content.item.file.url }}" type="video/mp4">
+                </video>
+            {% elif content.item|model_name == 'File'%}
+                <p><a download href="{{ content.item.file.url }}">{{ content.item.title }} download</a>
+                <p><a href="{{ content.item.file.url }}">{{ content.item.title }} open</a>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+
+    <div>
+        <p>Тестові відподіві:</p>
+        {% for question in questions %}
+            <p> {{ question.title }} {{ question|get_points_by_answer:student }}/{{ question.points }} балів</p>
+                <table border="1">
+                    {% if question.correct_answer == "A" %}
+                        {% if question|get_chose_answer:student == "A" %}
+                            <tr>
+                                <td style="background: aquamarine">A</td>
+                                <td>B</td>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "B" %}
+                            <tr>
+                                <td style="background: aquamarine">A</td>
+                                <td style="background: red">B</td>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "C" %}
+                            <tr>
+                                <td style="background: aquamarine">A</td>
+                                <td>B</td>
+                                <td style="background: red">C</td>
+                                <td>D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "D" %}
+                            <tr>
+                                <td style="background: aquamarine">A</td>
+                                <td>B</td>
+                                <td>C</td>
+                                <td style="background: red">D</td>
+                            </tr>
+                        {% endif %}
+
+                    {% elif question.correct_answer == "B" %}
+                        {% if question|get_chose_answer:student == "A" %}
+                            <tr>
+                                <td style="background: red">A</td>
+                                <td style="background: aquamarine">B</td>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "B" %}
+                            <tr>
+                                <td>A</td>
+                                <td style="background: aquamarine">B</td>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "C" %}
+                            <tr>
+                                <td>A</td>
+                                <td style="background: aquamarine">B</td>
+                                <td style="background: red">C</td>
+                                <td>D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "D" %}
+                            <tr>
+                                <td>A</td>
+                                <td style="background: aquamarine">B</td>
+                                <td>C</td>
+                                <td style="background: red">D</td>
+                            </tr>
+                        {% endif %}
+
+                    {% elif question.correct_answer == "С" %}
+                        {% if question|get_chose_answer:student == "A" %}
+                            <tr>
+                                <td style="background: red">A</td>
+                                <td>B</td>
+                                <td style="background: aquamarine">C</td>
+                                <td>D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "B" %}
+                            <tr>
+                                <td>A</td>
+                                <td style="background: red">B</td>
+                                <td style="background: aquamarine">C</td>
+                                <td>D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "C" %}
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                                <td style="background: aquamarine">C</td>
+                                <td>D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "D" %}
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                                <td style="background: aquamarine">C</td>
+                                <td style="background: red">D</td>
+                            </tr>
+                        {% endif %}
+
+                    {% elif question.correct_answer == "D" %}
+                        {% if question|get_chose_answer:student == "A" %}
+                            <tr>
+                                <td style="background: red">A</td>
+                                <td>B</td>
+                                <td>C</td>
+                                <td style="background: aquamarine">D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "B" %}
+                            <tr>
+                                <td>A</td>
+                                <td style="background: red">B</td>
+                                <td>C</td>
+                                <td style="background: aquamarine">D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "C" %}
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                                <td style="background: red">C</td>
+                                <td style="background: aquamarine">D</td>
+                            </tr>
+                        {% elif question|get_chose_answer:student == "D" %}
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                                <td>C</td>
+                                <td style="background: aquamarine">D</td>
+                            </tr>
+                        {% endif %}
+
+                    {% endif %}
+                </table>
+        {% endfor %}
+
+    </div>
+
+    <div>
+        <p>Фото виконаної роботи:</p>
+        {% for hw_image in hw_images %}
+            <img src="{{ hw_image.image.url }}" width="189" height="255">
+        {% endfor %}
+    </div>
+
+
+    {% if request.user.profile.type_user == 'tutor' %}
+        {% if progress|check_points_lesson_d:lesson.id %}
+            <div>
+                <p>Додаткові бали за роботу: {{ progress|get_points_lesson_d:lesson.id }}</p>
+            </div>
+        {% else %}
+            <div>
+                <p>Поставте оцінку за роботу (додаткові бали):</p>
+                <form action="." method="post">
+                    {% csrf_token %}
+                    <p>Кількість балів: (min=1; max=5)<input type="number"  name="points"  min="1" max="5" required></p>
+                    <p><input type="submit" name="action" value="Оцінити роботу"></p>
+                </form>
+            </div>
+        {% endif %}
+
+    {% else %}
+        {% if progress|check_points_lesson_d:lesson.id %}
+            <div>
+                <p>Додаткові бали за роботу: {{ progress|get_points_lesson_d:lesson.id }}</p>
+            </div>
+        {% else %}
+            <div>
+                <p>Бали від Тьютора ще не виставлені. Тьютор не перевірив роботу.</p>
+            </div>
+        {% endif %}
+    {% endif %}
+
+
+{% endblock %}

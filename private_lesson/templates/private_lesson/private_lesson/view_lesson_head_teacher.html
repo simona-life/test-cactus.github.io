@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Індивідуальне заняття{% endblock %}
+
+{% block content %}
+    <h1>Заплановане індивідуальне заняття</h1>
+
+    <div>
+        <p>Дата проведення: {{ lesson.lesson_date }}</p>
+        <p>Час проведення: {{ lesson.lesson_time }}</p>
+    </div>
+
+    <div>
+        <p>Студент: {{ student.profile.user.first_name }} {{ student.profile.user.last_name }}</p>
+        <p>Номер телефону: {{ student.profile.phone_number }}</p>
+    </div>
+
+    <div>
+        <p>Ваш тьютор: {{ tutor.profile.user.first_name }} {{ tutor.profile.user.last_name }}</p>
+        <p>Номер телефону: {{ tutor.profile.phone_number }}</p>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Індивідуальне заняття{% endblock %}
+
+{% block content %}
+    <h1>Результати індивідуального заняття</h1>
+
+    <div>
+        <p>Дата проведення: {{ lesson.lesson_date }}</p>
+        <p>Час проведення: {{ lesson.lesson_time }}</p>
+    </div>
+
+    <div>
+        <p>Студент: {{ student.profile.user.first_name }} {{ student.profile.user.last_name }}</p>
+        <p>Номер телефону: {{ student.profile.phone_number }}</p>
+    </div>
+
+    <div>
+        <p>Тьютор: {{ tutor.profile.user.first_name }} {{ tutor.profile.user.last_name }}</p>
+        <p>Номер телефону: {{ tutor.profile.phone_number }}</p>
+    </div>
+
+    <div>
+        <h2>Звіт Тьютора:</h2>
+        {% if lesson.video_lesson and lesson.report_tutor != '' %}
+            <p>Відео заняття</p>
+            <video controls="controls">
+                <source src="{{ lesson.video_lesson.url }}" type="video/mp4">
+            </video>
+
+            <p>Текстовий звіт по заняттю: {{ lesson.report_tutor }}</p>
+
+            {% if lesson.checked_by_head_teacher %}
+                <p>Вітаємо! Звіт поки було перевірено Хед-тічером.</p>
+            {% else %}
+                <form action="." method="post">
+                {% csrf_token %}
+                <p><input type="submit" name="action" onclick="return secondStep();" value="Зарахувати звіт"></p>
+            </form>
+            {% endif %}
+        {% else %}
+            <p>Тьютор поки не завантажив звіт по цьому заняттю. Спробуйте пізніше або зв'яжіться з ним</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function secondStep() {
+            return !!confirm("Ви точно хочете прийняти звіт?");
+        }
+    </script>
+
+{% endblock %}

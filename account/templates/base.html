@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="uk">
+     <head>
+         <title>{% block title %}{% endblock %}</title>
+         <link rel="stylesheet" href="{% static "course/css/styles.css" %}" />
+         <script type="text/javascript" src="{% static "timetable/js/timetable_script.js" %}"></script>
+         <script type="text/javascript" src="{% static "account/js/account_script.js" %}"></script>
+{#         <script type="text/javascript" src="{% static "js/script.js" %}"></script>#}
+     </head>
+     <body>
+         <div id="header" style="background: #5b8774">
+             <span class="logo">CactusPro</span>
+
+             {% if request.user.is_authenticated %}
+                 <ul class="menu">
+                 {% if request.user.profile.type_user != "guest" %}
+                     <li {% if section == "personal_cabinet" %} class="selected"{% endif %}>
+                            <a href="{% url "personal_cabinet" %}">Мій кабінет</a>
+                     </li>
+                 {% endif %}
+                     <li {% if section == "all_courses" %}class="selected"{% endif %}>
+                         <a href={% url "all_courses" %}>Всі курси</a>
+                     </li>
+                 </ul>
+             {% endif %}
+
+             <span class="user">
+                {% if request.user.is_authenticated %}
+                    {{ request.user.first_name }}
+                    <a href="{% url "edit" %}">Профіль</a>
+                    {% if request.user.profile.type_user == "tutor"%}
+                        <a href="{% url "change_month_timetable_tutor" %}">Розклад на місяць</a>
+                    {% endif %}
+                    <a href="{% url "password_change" %}">Змінити пароль</a>
+                    <a href="{% url "logout" %}">Вийти</a>
+                {% else %}
+                    <a href={% url "all_courses" %}>Всі курси</a>
+                    <a href="{% url "register" %}">Зареєструватись</a>
+                    <a href="{% url "login" %}">Увійти</a>
+                 {% endif %}
+             </span>
+        </div>
+
+         <div id="content">
+
+         {% if messages %}
+             {% for message in messages %}
+
+                 {% if message.tags == 'error' %}
+                     <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                     </div>
+                 {% else %}
+                     <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                     </div>
+                 {% endif %}
+
+             {% endfor %}
+         {% endif %}
+
+         {% block content %}{% endblock %}
+         </div>
+
+     </body>
+</html>

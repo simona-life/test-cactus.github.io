@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Course{% endblock %}
+
+{% block content %}
+    <h2>Назва курсу: {{ course.title }}</h2>
+
+    <p>Термін підписки вже закінчився :(</p>
+    <p>Ви можете продовжити підписку <a href="{% url 'buy_course' cid=course.id %}"></a>тут!</p>
+
+    {#   Topics:   #}
+    <ul>
+    {% for topic in course.topics.all %}
+        <li>{{ topic.title }}</li>
+            {#   Lessons topic:   #}
+            <ul>
+                {% for lesson in topic.lessons.all %}
+                    <li>{{ lesson.title }}</li>
+                {% endfor %}
+            </ul>
+    {% endfor %}
+    <p>Ви вже пройшли .... %!</p>
+    </ul>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+.form1, .form2 {
+   display:none;
+}
+
+.visible {
+   display:block;
+}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Course{% endblock %}
+
+{% block content %}
+
+    <h2>Назва курсу: {{ course.title }}</h2>
+
+    {#   Topics:   #}
+    <p>Теми:</p>
+    <ul>
+    {% for topic in course.topics.all %}
+        <li>{{ topic.title }}</li>
+            {#   Lessons topic:   #}
+            <ul>
+                {% for lesson in topic.lessons.all %}
+                    <li><a href="{% url 'lesson' cid=course.id lid=lesson.id %}">{{ lesson.title }}</a></li>
+                {% endfor %}
+            </ul>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

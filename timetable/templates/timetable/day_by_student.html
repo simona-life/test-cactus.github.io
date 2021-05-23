@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Обрати час заняття{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Обрати час заняття</h1>
+        <p>Дата: {{ date_day }} {{ name_month }} {{ current_year }} </p>
+    </div>
+
+    <div>
+        <form action="." method="post">
+            {% csrf_token %}
+            <table id="time_table" border="1">
+                <tr>
+                    {% for time in unbooked_today_time_list %}
+                        <td class="day_time" abbr="{{ time }}">{{ time }}<input type="radio" class="{{ time }}" name="time" value="{{ time }}" hidden></td>
+                    {% endfor %}
+                </tr>
+            </table>
+            <input type="submit" name="action" value="Забронювати місце">
+        </form>
+    </div>
+
+
+    <script>
+    {# listener #}
+        let time_table = document.getElementById('time_table');
+
+        time_table.addEventListener('click', e => {
+            const cell = e.target.closest('.day_time');
+            changeInputAndBackgroundDateStudent(time_table, cell)
+        });
+
+        function changeInputAndBackgroundDateStudent(time_table, th_label){
+            let arr = document.getElementsByClassName('day_time');
+
+            for (var i = 0; i < arr.length; i++) {
+              arr[i].style.background = 'white'
+            }
+
+            let radio_time = document.getElementsByClassName(`${th_label.abbr}`)[0];
+            if (radio_time.checked === true){
+                th_label.style = "background: white";
+                radio_time.checked = false;
+            }else{
+                th_label.style = "background: aquamarine";
+                radio_time.checked = true;
+            }
+        }
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Мій кабінет{% endblock %}
+
+{% block content %}
+
+    <div>
+        <h1>Мій кабінет</h1>
+        <p>Мої курси:</p>
+        {% if progresses != 0 %}
+            {% for progress in progresses %}
+                <div>
+                    <h5>{{ progress.id_course|get_title_course_by_id }}</h5>
+                    <a href="{% url 'student_course_details'  cid=progress.id_course %}">Продовжити вчитися</a>
+                    <a href="{% url 'course_details'  cid=progress.id_course %}">Більше про курс</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Ви поки не навчаєтесь ні на якому курсі!</p>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

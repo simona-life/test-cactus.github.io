@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Мій кабінет{% endblock %}
+
+{% block content %}
+    <h1>Мій кабінет</h1>
+
+    <div>
+        <h5>Призначені Вам Тьютори:</h5>
+        {% if tutors != 0 %}
+            <table border="1">
+                <tr>
+                    <th>Юзернейм тьютора</th>
+                    <th>Ім'я Призвище</th>
+                    <th>Номер телефону</th>
+                    <th>Більше інформації</th>
+                </tr>
+                {% for tutor in tutors %}
+                    <tr>
+                        <td>{{ tutor.profile.user.username }}</td>
+                        <td>{{ tutor.profile.user.first_name }} {{ tutor.profile.user.last_name }}</td>
+                        <td>{{ tutor.profile.phone_number }}</td>
+                        <td><a href="{% url 'tutor_info' tid=tutor.id %}">Обрати</a></td>
+                    </tr>
+                {% endfor %}
+        </table>
+        {% else %}
+            <p>Наразі Вам не призначено або Ви не додали жодного Тьютора.</p>
+        {% endif %}
+
+    </div>
+
+    <div>
+        <h5>Додати нового Тьютора</h5>
+        <form action="." method="post">
+            <input type="email" name="email" placeholder="Email нового Тьютора">
+            <input list="all courses" name="course" placeholder="Оберіть курс">
+            <datalist id="all courses">
+                {% for course in courses %}
+                    <option>ID:{{ course.id }} Назва:"{{ course.title }}"</option>
+                {% endfor %}
+            </datalist>
+            <input type="submit" value="Додати тьютора">
+        </form>
+    </div>
+
+    <div>
+        <h5>Студенти без Тьютора:</h5>
+        <table border="1">
+            <tr>
+                <th>Юзернейм студента</th>
+                <th>Ім'я Призвище</th>
+                <th>ID курса</th>
+                <th>Курс</th>
+                <th>Більше інформації/Назначити тьютора</th>
+            </tr>
+            {% for progress in without_tutor_students_progresses %}
+                <tr>
+                    <td>{{ progress|get_username_by_progress }}</td>
+                    <td>{{ progress|get_names_by_progress }}</td>
+                    <td>{{ progress.id_course }}</td>
+                    <td>{{ progress.id_course|get_title_course_by_id }}</td>
+                    <td><a href="{% url 'student_progress_by_head_teacher' cid=progress.id_course sid=progress.student_fk.id %}">Обрати</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+{% endblock %}

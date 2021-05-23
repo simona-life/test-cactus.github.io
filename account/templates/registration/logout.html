@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Дякуєм за користування нашим сайтом!{% endblock %}
+
+{% block content %}
+    <h1>Дякуєм за користування нашим сайтом!</h1>
+
+    <h2><a href="{% url "all_courses" %}">Усі курси</a></h2>
+
+    <p>Будь ласка <a href="{% url "login" %}">увійдіть у акаунт</a>, або
+        <a href="{% url "register" %}">зареєструйтесь тут.</a>
+    </p>
+
+    <p><a href="{% url "password_reset" %}">Забули пароль?</a></p>
+
+{% endblock %}

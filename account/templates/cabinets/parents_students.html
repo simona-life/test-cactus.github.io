@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Мій кабінет{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Мій кабінет</h1>
+    </div>
+
+    <h1>Зареєстровані мною Студенти</h1>
+    {% for student in students %}
+        <div>
+            <p>{{ student.profile.user.first_name }} {{ student.profile.user.last_name }}</p>
+            <p>{{ student.profile.user.username }}</p>
+            <p><a href="{% url 'sid_student_info_for_parent' sid=student.id %}">Деталі</a></p>
+        </div>
+    {% endfor %}
+
+{% endblock %}

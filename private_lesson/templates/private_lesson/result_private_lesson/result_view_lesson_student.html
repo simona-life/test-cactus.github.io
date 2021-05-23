@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Індивідуальне заняття{% endblock %}
+
+{% block content %}
+    <h1>Результати індивідуального заняття</h1>
+
+    <div>
+        <p>Дата проведення: {{ lesson.lesson_date }}</p>
+        <p>Час проведення: {{ lesson.lesson_time }}</p>
+    </div>
+
+    <div>
+        <p>Ваш тьютор: {{ tutor.profile.user.first_name }} {{ tutor.profile.user.last_name }}</p>
+        <p>Номер телефону: {{ tutor.profile.phone_number }}</p>
+    </div>
+
+    <div>
+        <h2>Відео заняття</h2>
+        {% if lesson.video_lesson %}
+            <video controls="controls">
+                <source src="{{ lesson.video_lesson.url }}" type="video/mp4">
+            </video>
+        {% else %}
+            <p>Тьютор поки не завантажив відео з заняття. Спробуйте пізніше!</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <p></p>
+        <form action="." method="post">
+            {% csrf_token %}
+            <p><input type="submit" name="action" value="Урок не було проведено"></p>
+        </form>
+    </div>
+
+{% endblock %}

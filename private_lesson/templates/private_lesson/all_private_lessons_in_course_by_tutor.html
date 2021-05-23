@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Мої приватні уроки{% endblock %}
+
+{% block content %}
+    <h1>Усі приватні уроки:</h1>
+
+    <h5>Уроки з НЕ завантаженими звітами:</h5>
+    {% for lesson in all_lessons %}
+        <div>
+            {% if not lesson.video_lesson and lesson.lesson_date < today_date %}
+                <div>
+                    <p>Студент: {{ lesson.student_fk.profile.user.first_name }} {{ lesson.student_fk.profile.user.last_name }}</p>
+                    <p>Дата уроку: {{ lesson.lesson_date }}</p>
+                    <p>Терміново завантажте відео та звіт з <a href="{% url 'result_private_lesson_view_by_tutor' lid=lesson.id %}">поточного уроку</a>!</p>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <h5>Заплановані уроки:</h5>
+    {% for lesson in all_lessons %}
+        <div>
+            {% if lesson.lesson_date > today_date %}
+                <div>
+                    <p>Студент: {{ lesson.student_fk.profile.user.first_name }} {{ lesson.student_fk.profile.user.last_name }}</p>
+                    <p>Дата уроку: {{ lesson.lesson_date }}</p>
+                    <p><a href="{% url 'private_lesson_view' lid=lesson.id %}">Деталі</a></p>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+
+    <h5>Уроки з завантаженими звітами:</h5>
+    {% for lesson in all_lessons %}
+        <div>
+            {% if lesson.video_lesson %}
+                <div>
+                    <p>Студент: {{ lesson.student_fk.profile.user.first_name }} {{ lesson.student_fk.profile.user.last_name }}</p>
+                    <p>Дата уроку: {{ lesson.lesson_date }}</p>
+                    <p>Статус перевірки Хед-течером:
+                        {% if lesson.checked_by_head_teacher %}
+                            перевірено
+                        {% else %}
+                            НЕ перевірено
+                        {% endif %}
+                    </p>
+                    <p><a href="{% url 'result_private_lesson_view_by_tutor' lid=lesson.id %}">Переглянути мій звіт</a></p>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+{% endblock %}

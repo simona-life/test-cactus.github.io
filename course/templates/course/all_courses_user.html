@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Доступні курси{% endblock %}
+
+{% block content %}
+    <h1>Доступні курси:</h1>
+
+    {% for course in courses %}
+        <div>
+            <h2>Назва курсу: {{ course.title }}</h2>
+            {#   Topics:   #}
+            <p>Теми:</p>
+            <ul>
+            {% for topic in course.topics.all %}
+                <li>{{ topic.title }}</li>
+                    {#   Lessons topic:   #}
+                    <ul>
+                        {% for lesson in topic.lessons.all %}
+                            <li>{{ lesson.title }}</li>
+                        {% endfor %}
+                    </ul>
+            {% endfor %}
+            </ul>
+            <a href="{% url 'course_details' cid=course.id %}">Більше про курс</a>
+        </div>
+    {% endfor %}
+
+{% endblock %}

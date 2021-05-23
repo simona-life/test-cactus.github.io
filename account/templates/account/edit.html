@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Змінити дані{% endblock %}
+
+{% block content %}
+    <h1>Змінити дані</h1>
+    <p>Змінити дані можна нижче:</p>
+
+    <form action="." method="post" enctype="multipart/form-data">
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Зберегти зміни"></p>
+    </form>
+{% endblock %}

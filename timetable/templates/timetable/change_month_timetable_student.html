@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Мій розклад{% endblock %}
+
+{% block content %}
+    <div>
+        <p>Залишилось {{ bought_lessons }} доступних занять з Тьютором.</p>
+    </div>
+
+    <div>
+        <p>Оберіть дату проведення уроку нижче:</p>
+
+        <table id="calendar_table" border="1">
+            {#  month and year  #}
+            <tr>
+                <td colspan="7">{{ name_month }} {{ current_year }} рік</td>
+            </tr>
+            {#  title  #}
+            <tr>
+                <td>ПН</td>
+                <td>ВТ</td>
+                <td>СР</td>
+                <td>ЧТ</td>
+                <td>ПТ</td>
+                <td>СБ</td>
+                <td>НД</td>
+            </tr>
+            {#  1st week  #}
+            <tr>
+                <td id="week_day_1" class="week_day"></td>
+                <td id="week_day_2" class="week_day"></td>
+                <td id="week_day_3" class="week_day"></td>
+                <td id="week_day_4" class="week_day"></td>
+                <td id="week_day_5" class="week_day"></td>
+                <td id="week_day_6" class="week_day"></td>
+                <td id="week_day_7" class="week_day"></td>
+            </tr>
+            {#  2d week  #}
+            <tr>
+                <td id="week_day_8" class="week_day"></td>
+                <td id="week_day_9" class="week_day"></td>
+                <td id="week_day_10" class="week_day"></td>
+                <td id="week_day_11" class="week_day"></td>
+                <td id="week_day_12" class="week_day"></td>
+                <td id="week_day_13" class="week_day"></td>
+                <td id="week_day_14" class="week_day"></td>
+            </tr>
+            {#  3d week  #}
+            <tr>
+                <td id="week_day_15" class="week_day"></td>
+                <td id="week_day_16" class="week_day"></td>
+                <td id="week_day_17" class="week_day"></td>
+                <td id="week_day_18" class="week_day"></td>
+                <td id="week_day_19" class="week_day"></td>
+                <td id="week_day_20" class="week_day"></td>
+                <td id="week_day_21" class="week_day"></td>
+            </tr>
+            {#  4th week  #}
+            <tr>
+                <td id="week_day_22" class="week_day"></td>
+                <td id="week_day_23" class="week_day"></td>
+                <td id="week_day_24" class="week_day"></td>
+                <td id="week_day_25" class="week_day"></td>
+                <td id="week_day_26" class="week_day"></td>
+                <td id="week_day_27" class="week_day"></td>
+                <td id="week_day_28" class="week_day"></td>
+            </tr>
+            {#  5th week  #}
+            <tr>
+                <td id="week_day_29" class="week_day"></td>
+                <td id="week_day_30" class="week_day"></td>
+                <td id="week_day_31" class="week_day"></td>
+                <td id="week_day_32" class="week_day"></td>
+                <td id="week_day_33" class="week_day"></td>
+                <td id="week_day_34" class="week_day"></td>
+                <td id="week_day_35" class="week_day"></td>
+            </tr>
+            {#  6th week  #}
+            <tr>
+                <td id="week_day_36" class="week_day" hidden></td>
+                <td id="week_day_37" class="week_day" hidden></td>
+                <td id="week_day_38" class="week_day" hidden></td>
+                <td id="week_day_39" class="week_day" hidden></td>
+                <td id="week_day_40" class="week_day" hidden></td>
+                <td id="week_day_41" class="week_day" hidden></td>
+                <td id="week_day_42" class="week_day" hidden></td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+
+
+        if ({{ first_day_week }} == 0) {
+            createCalendar('week_day_1', 0+1, {{ length_month_list }});
+        } else if ({{ first_day_week }} == 1) {
+            createCalendar('week_day_2', 1+1, {{ length_month_list }});
+        } else if ({{ first_day_week }} == 2) {
+            createCalendar('week_day_3', 2+1, {{ length_month_list }});
+        } else if ({{ first_day_week }} == 3) {
+            createCalendar('week_day_4', 3+1, {{ length_month_list }});
+        } else if ({{ first_day_week }} == 4) {
+            createCalendar('week_day_5', 4+1, {{ length_month_list }});
+        }else if ({{ first_day_week }} == 5) {
+            if ({{length_month}} > 30) {
+                week_day_36.hidden = false;
+                week_day_37.hidden = false;
+                week_day_38.hidden = false;
+                week_day_39.hidden = false;
+                week_day_40.hidden = false;
+                week_day_41.hidden = false;
+                week_day_42.hidden = false;
+            }
+            createCalendar('week_day_6', 5+1, {{ length_month_list }});
+        }else {
+            if ({{length_month}} > 29) {
+                week_day_36.hidden = false;
+                week_day_37.hidden = false;
+                week_day_38.hidden = false;
+                week_day_39.hidden = false;
+                week_day_40.hidden = false;
+                week_day_41.hidden = false;
+                week_day_42.hidden = false;
+            }
+            createCalendar('week_day_7', 6+1, {{ length_month_list }});
+        }
+
+        let selected_weekdays = {% autoescape off %} {{ selected_weekdays }} {% endautoescape %};
+        let id_month_timetable_tutor = {% autoescape off %} {{ id_month_timetable_tutor }} {% endautoescape %};
+
+        if (selected_weekdays !== {}){
+            defaultCheckedCheckboxDate(selected_weekdays)
+            let elements = document.getElementsByClassName(`week_day`);
+            for (let key in selected_weekdays) {
+                for (let i = 0; i < elements.length; i += 1) {
+                   if (elements[i].abbr === key ) {
+                       let myFavoriteUrl = `/timetable/${key}` + '/date_by_student/'+ `${id_month_timetable_tutor}` + '/';
+                       elements[i].innerHTML = `<a href="${myFavoriteUrl}">${key}</a>`;
+                       elements[i].style = "background: aquamarine";
+                  }
+                }
+            }
+        }
+
+
+    </script>
+{% endblock %}

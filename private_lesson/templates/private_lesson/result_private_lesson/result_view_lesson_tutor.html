@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Індивідуальне заняття{% endblock %}
+
+{% block content %}
+    <h1>Результати індивідуального заняття</h1>
+
+    <div>
+        <p>Дата проведення: {{ lesson.lesson_date }}</p>
+        <p>Час проведення: {{ lesson.lesson_time }}</p>
+    </div>
+
+    <div>
+        <p>Студент: {{ student.profile.user.first_name }} {{ student.profile.user.last_name }}</p>
+        <p>Номер телефону: {{ student.profile.phone_number }}</p>
+    </div>
+
+    <div>
+        <h2>Ваш звіт:</h2>
+        {% if lesson.video_lesson and lesson.report_tutor != '' %}
+            <p>Відео заняття</p>
+            <video controls="controls">
+                <source src="{{ lesson.video_lesson.url }}" type="video/mp4">
+            </video>
+
+            <p>Текстовий звіт по заняттю: {{ lesson.report_tutor }}</p>
+
+            {% if lesson.checked_by_head_teacher %}
+                <p>Вітаємо! Звіт поки було перевірено Хед-тічером.</p>
+            {% else %}
+                <p>Звіт поки не було перевірено Хед-тічером.</p>
+            {% endif %}
+        {% else %}
+            <p>Завантажте звіт за заняття:</p>
+            <form action="." method="post">
+                {% csrf_token %}
+                <p>Завантажте відео заняття <input type="file" name="video" required></p>
+                <p>Напишіть текстовий звіт по уроку <input type="text" name="report_tutor" required></p>
+                <p><input type="submit" name="action" value="Зберегти звіт"></p>
+            </form>
+        {% endif %}
+    </div>
+
+{% endblock %}

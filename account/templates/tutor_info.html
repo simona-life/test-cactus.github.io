@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Тьютор{% endblock %}
+
+{% block content %}
+
+    <div>
+        <p>Про Тьютора</p>
+
+        <table border="1">
+            <tr>
+                <th>Юзернейм тьютора</th>
+                <th>Ім'я Призвище</th>
+                <th>Номер телефону</th>
+                <th>Максимальна к-ть студентів</th>
+                <th>Всього студентів</th>
+            </tr>
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                <td>{{ profile.phone_number }}</td>
+                <th>{{ tutor.chose_qty_students }}</th>
+                <th>{{ current_qty_students }}</th>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <h5>Cтуденти:</h5>
+        <table border="1">
+            <tr>
+                <th>Юзернейм студента</th>
+                <th>Ім'я Призвище</th>
+                <th>ID курса</th>
+                <th>Курс</th>
+                <th>Прогрес студента</th>
+            </tr>
+            {% for progress in tutors_students_progresses %}
+                <tr>
+                    <td>{{ progress|get_username_by_progress }}</td>
+                    <td>{{ progress|get_names_by_progress }}</td>
+                    <td>{{ progress.id_course }}</td>
+                    <td>{{ progress.id_course|get_title_course_by_id }}</td>
+                    <td><a href="{% url 'student_progress_by_head_teacher' cid=progress.id_course sid=student.id %}">Обрати</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="submit" name="action" class="delete-button" value="Звільнити Тьютора">
+        </form>
+
+        <p>При звільненні Тьютор набуде статусу "Гість". Перед звільненням необхідно переназначити Тьютора для кожного з студентів поточного Тьютора </p>
+    </div>
+
+    <div>
+        <p>Індивідуальні роботи з неперевіреним звітом:</p>
+        {% if private_lessons_unchecked != 0 %}
+            {% for private_lesson in private_lessons_unchecked %}
+                {% if not private_lesson.checked_by_head_teacher %}
+                    <div>
+                        <p>Дата: {{ private_lesson.lesson_date }} ; час: {{ lesson.lesson_time }}</p>
+                        <p>Тьютор: {{ tutor.profile.user.first_name }} {{ tutor.profile.user.last_name }}</p>
+                        <p>Студент: {{ student.profile.user.first_name }} {{ student.profile.user.last_name }}</p>
+                        <p><a href="{% url 'private_lesson_view_by_head_teacher' lid=private_lesson.id %}">Деталі</a></p>
+                     </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>Поки немає жодного проведеного індивідуального уроку.</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <p>Індивідуальні роботи з перевіреним звітом:</p>
+        {% if private_lessons_checked != 0 %}
+            {% for private_lesson in private_lessons_checked %}
+                {% if private_lesson.checked_by_head_teacher %}
+                    <p>Дата: {{ private_lesson.lesson_date }} ; час: {{ lesson.lesson_time }}</p>
+                    <p>Тьютор: {{ tutor.profile.user.first_name }} {{ tutor.profile.user.last_name }}</p>
+                    <p>Студент: {{ student.profile.user.first_name }} {{ student.profile.user.last_name }}</p>
+                    <p><a href="{% url 'result_private_lesson_view_by_head_teacher' lid=private_lesson.id %}">Деталі</a></p>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>Поки немає жодного проведеного індивідуального уроку.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        $(document).on('click', '.delete-button', function(){
+        return confirm('Ви дійсно хочете звільнити Тьютора?');
+        })
+    </script>
+
+{% endblock %}

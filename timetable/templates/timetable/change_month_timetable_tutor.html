@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Мій розклад{% endblock %}
+
+{% block content %}
+
+    <div>
+        <form action="." method="post">
+            {% csrf_token %}
+            <p>Зелені клітинки - це дні, у які Ви готові проводити уроки.</p>
+
+            <table id="calendar_table" border="1">
+                {#  month and year  #}
+                <tr>
+                    <td colspan="7">{{ name_month }} {{ current_year }} рік</td>
+                </tr>
+                {#  title  #}
+                <tr>
+                    <td>ПН</td>
+                    <td>ВТ</td>
+                    <td>СР</td>
+                    <td>ЧТ</td>
+                    <td>ПТ</td>
+                    <td>СБ</td>
+                    <td>НД</td>
+                </tr>
+                {#  1st week  #}
+                <tr>
+                    <td id="week_day_1" class="week_day"></td>
+                    <td id="week_day_2" class="week_day"></td>
+                    <td id="week_day_3" class="week_day"></td>
+                    <td id="week_day_4" class="week_day"></td>
+                    <td id="week_day_5" class="week_day"></td>
+                    <td id="week_day_6" class="week_day"></td>
+                    <td id="week_day_7" class="week_day"></td>
+                </tr>
+                {#  2d week  #}
+                <tr>
+                    <td id="week_day_8" class="week_day"></td>
+                    <td id="week_day_9" class="week_day"></td>
+                    <td id="week_day_10" class="week_day"></td>
+                    <td id="week_day_11" class="week_day"></td>
+                    <td id="week_day_12" class="week_day"></td>
+                    <td id="week_day_13" class="week_day"></td>
+                    <td id="week_day_14" class="week_day"></td>
+                </tr>
+                {#  3d week  #}
+                <tr>
+                    <td id="week_day_15" class="week_day"></td>
+                    <td id="week_day_16" class="week_day"></td>
+                    <td id="week_day_17" class="week_day"></td>
+                    <td id="week_day_18" class="week_day"></td>
+                    <td id="week_day_19" class="week_day"></td>
+                    <td id="week_day_20" class="week_day"></td>
+                    <td id="week_day_21" class="week_day"></td>
+                </tr>
+                {#  4th week  #}
+                <tr>
+                    <td id="week_day_22" class="week_day"></td>
+                    <td id="week_day_23" class="week_day"></td>
+                    <td id="week_day_24" class="week_day"></td>
+                    <td id="week_day_25" class="week_day"></td>
+                    <td id="week_day_26" class="week_day"></td>
+                    <td id="week_day_27" class="week_day"></td>
+                    <td id="week_day_28" class="week_day"></td>
+                </tr>
+                {#  5th week  #}
+                <tr>
+                    <td id="week_day_29" class="week_day"></td>
+                    <td id="week_day_30" class="week_day"></td>
+                    <td id="week_day_31" class="week_day"></td>
+                    <td id="week_day_32" class="week_day"></td>
+                    <td id="week_day_33" class="week_day"></td>
+                    <td id="week_day_34" class="week_day"></td>
+                    <td id="week_day_35" class="week_day"></td>
+                </tr>
+                {#  6th week  #}
+                <tr>
+                    <td id="week_day_36" class="week_day" hidden></td>
+                    <td id="week_day_37" class="week_day" hidden></td>
+                    <td id="week_day_38" class="week_day" hidden></td>
+                    <td id="week_day_39" class="week_day" hidden></td>
+                    <td id="week_day_40" class="week_day" hidden></td>
+                    <td id="week_day_41" class="week_day" hidden></td>
+                    <td id="week_day_42" class="week_day" hidden></td>
+                </tr>
+            </table>
+
+            <p>Зелені клітинки - це час, у який Ви готові проводити уроки. Обраний час застосується для всіх обраних дат.</p>
+
+            <table id="timetable" border="1">
+                <tr>
+                    <td></td>
+                    <td>8:00-9:00</td>
+                    <td>9:00-10:00</td>
+                    <td>10:00-11:00</td>
+                    <td>11:00-12:00</td>
+                    <td>12:00-13:00</td>
+                    <td>13:00-14:00</td>
+                    <td>14:00-15:00</td>
+                    <td>15:00-16:00</td>
+                    <td>16:00-17:00</td>
+                    <td>17:00-18:00</td>
+                    <td>18:00-19:00</td>
+                    <td>19:00-20:00</td>
+                    <td>20:00-21:00</td>
+                </tr>
+                <tr id="monday_time">
+                    <td>Понеділок</td>
+                    <script>
+                        labelTimeCreation('monday_time', 1);
+                    </script>
+                </tr>
+                <tr id="tuesday_time">
+                    <td>Вівторок</td>
+                    <script>
+                        labelTimeCreation('tuesday_time', 2);
+                    </script>
+                </tr>
+                <tr id="wednesday_time">
+                    <td>Середа</td>
+                    <script>
+                        labelTimeCreation('wednesday_time', 3);
+                    </script>
+                </tr>
+                <tr id="thursday_time">
+                    <td>Четвер</td>
+                    <script>
+                        labelTimeCreation('thursday_time', 4);
+                    </script>
+                </tr>
+                <tr id="friday_time">
+                    <td>П'ятниця</td>
+                    <script>
+                        labelTimeCreation('friday_time', 5);
+                    </script>
+                </tr>
+                <tr id="saturday_time">
+                    <td>Субота</td>
+                    <script>
+                        labelTimeCreation('saturday_time', 6);
+                    </script>
+                </tr>
+                <tr id="sunday_time">
+                    <td>Неділя</td>
+                    <script>
+                        labelTimeCreation('sunday_time', 7);
+                    </script>
+                </tr>
+            </table>
+
+            <input type="submit" name="action" value="Зберегти зміни">
+        </form>
+
+
+    </div>
+
+
+    <script>
+        defaultCheckedCheckboxTime({% autoescape off %} {{ default_hours_id_list }} {% endautoescape %});
+
+        {#  generate calendar  #}
+        if ({{ first_day_week }} == 0) {
+            createCalendar('week_day_1', 0+1, {{ length_month_list }});
+        } else if ({{ first_day_week }} == 1) {
+            createCalendar('week_day_2', 1+1, {{ length_month_list }});
+        } else if ({{ first_day_week }} == 2) {
+            createCalendar('week_day_3', 2+1, {{ length_month_list }});
+        } else if ({{ first_day_week }} == 3) {
+            createCalendar('week_day_4', 3+1, {{ length_month_list }});
+        } else if ({{ first_day_week }} == 4) {
+            createCalendar('week_day_5', 4+1, {{ length_month_list }});
+        }else if ({{ first_day_week }} == 5) {
+            if ({{length_month}} > 30) {
+                week_day_36.hidden = false;
+                week_day_37.hidden = false;
+                week_day_38.hidden = false;
+                week_day_39.hidden = false;
+                week_day_40.hidden = false;
+                week_day_41.hidden = false;
+                week_day_42.hidden = false;
+            }
+            createCalendar('week_day_6', 5+1, {{ length_month_list }});
+        }else {
+            if ({{length_month}} > 29) {
+                week_day_36.hidden = false;
+                week_day_37.hidden = false;
+                week_day_38.hidden = false;
+                week_day_39.hidden = false;
+                week_day_40.hidden = false;
+                week_day_41.hidden = false;
+                week_day_42.hidden = false;
+            }
+            createCalendar('week_day_7', 6+1, {{ length_month_list }});
+        }
+
+
+        {# listeners #}
+        calendar_table = document.getElementById('calendar_table');
+        calendar_table.addEventListener('click', e => {
+           const cell = e.target.closest('.week_day');
+           if(cell && Number.isInteger(parseInt(cell.innerHTML))){
+               changeInputAndBackgroundDate(cell, cell.id, {% autoescape off %} {{ today_date }} {% endautoescape %})
+          }
+        });
+
+        timetable = document.getElementById('timetable');
+        timetable.addEventListener('click', e => {
+           const cell = e.target.closest('.time_day');
+           if(cell){
+               changeInputAndBackgroundTime(cell, cell.id)
+          }
+        });
+
+        defaultCheckedCheckboxDate({% autoescape off %} {{ selected_weekdays }} {% endautoescape %});
+        todayLabelStyleChange({% autoescape off %} {{ today_date }} {% endautoescape %});
+
+    </script>
+{% endblock %}

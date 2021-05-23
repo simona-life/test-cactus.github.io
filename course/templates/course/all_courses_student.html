@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}All-courses{% endblock %}
+
+{% block content %}
+    <h1>Доступні курси:</h1>
+
+    {% for course in courses %}
+        <div>
+            <h2>Назва курсу: {{ course.title }}</h2>
+            <p>Course id: {{ course.id }}</p>
+            {#   Topics:   #}
+            <p>Теми:</p>
+            <ul>
+            {% for topic in course.topics.all %}
+                <li>{{ topic.title }}</li>
+                    {#   Lessons topic:   #}
+                    <ul>
+                        {% for lesson in topic.lessons.all %}
+                            <li>{{ lesson.title }}</li>
+                        {% endfor %}
+                    </ul>
+            {% endfor %}
+            </ul>
+            <a href="{% url 'course_details' cid=course.id %}">Більше про курс</a>
+            {% if course.id|bought_course_check:student %}
+                <a href="{% url 'student_course_details' cid=course.id %}">Продовжити навчання</a>
+            {% else %}
+                <a href="{% url 'buy_course' cid=course.id %}">Записатись на курс</a>
+            {% endif %}
+
+        </div>
+    {% endfor %}
+
+{% endblock %}

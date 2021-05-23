@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Курс {{ course.title }}{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Курс {{ course.title }}</h1>
+
+        <a href={% url 'change_month_timetable_student'  cid=course.id %}>Обрати дні та час занять</a>
+        <p><a href="{% url 'buy_additional_private_lessons_by_student' cid=course.id %}">Придбати додаткові індивідуальні уроки з Тьютором</a></p>
+
+        <h2>Назва курсу: {{ course.title }}</h2>
+    </div>
+
+    <div>
+        <table id="timetable" border="1">
+            <tr>
+                <td></td>
+                <td>8:00-9:00</td>
+                <td>9:00-10:00</td>
+                <td>10:00-11:00</td>
+                <td>11:00-12:00</td>
+                <td>12:00-13:00</td>
+                <td>13:00-14:00</td>
+                <td>14:00-15:00</td>
+                <td>15:00-16:00</td>
+                <td>16:00-17:00</td>
+                <td>17:00-18:00</td>
+                <td>18:00-19:00</td>
+                <td>19:00-20:00</td>
+                <td>20:00-21:00</td>
+            </tr>
+            <tr id="monday_time">
+                <td>Понеділок</td>
+                <script>
+
+                </script>
+            </tr>
+            <tr id="tuesday_time">
+                <td>Вівторок</td>
+                <script>
+
+                </script>
+            </tr>
+            <tr id="wednesday_time">
+                <td>Середа</td>
+                <script>
+
+                </script>
+            </tr>
+            <tr id="thursday_time">
+                <td>Четвер</td>
+                <script>
+
+                </script>
+            </tr>
+            <tr id="friday_time">
+                <td>П'ятниця</td>
+                <script>
+
+                </script>
+            </tr>
+            <tr id="saturday_time">
+                <td>Субота</td>
+                <script>
+
+                </script>
+            </tr>
+            <tr id="sunday_time">
+                <td>Неділя</td>
+                <script>
+
+                </script>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <div>
+        {#   Topics:   #}
+        <ul>
+        {% for topic in course.topics.all %}
+            <li>{{ topic.title }}</li>
+                {#   Lessons topic:   #}
+                <ul>
+                    {% for lesson in topic.lessons.all %}
+                        {% if access_lessons|check_access_lesson:lesson.id %}
+                            <li><a href="{% url 'lesson'  cid=course.id lid=lesson.id %}">{{ lesson.title }}</a></li>
+                        {% else %}
+                            <li>Цей урок ще не було відкрито: {{ lesson.title }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <p>Індивідуальні заняття з Тьютором:</p>
+    {% if private_lessons == 0 %}
+        <p>Наразі у Вас немає жодного проведеного заняття.</p>
+    {% else %}
+            {% for private_lesson in private_lessons %}
+                {% if private_lesson.checked_by_head_teacher %}
+                    <p>Дата: {{ private_lesson.lesson_date }} ; час: {{ lesson.lesson_time }}</p>
+                    <p>Тьютор: {{ tutor.profile.user.first_name }} {{ tutor.profile.user.last_name }}</p>
+                    <p>Студент: {{ student.profile.user.first_name }} {{ student.profile.user.last_name }}</p>
+                    <p><a href="{% url 'result_private_lesson_view_by_student' lid=private_lesson.id %}">Деталі</a></p>
+                {% endif %}
+            {% endfor %}
+    {% endif %}
+    </div>
+
+    <script>
+        today_day = {{ today_day }}
+        today_weekday = {{ today_weekday }}
+        current_month = {{ current_month }}
+        max_day_month = {{ max_day_month }}
+
+        date_dict = calendarDateAdd(today_day, today_weekday, current_month, max_day_month)
+
+        labelTimeCreationForCabinet('monday_time', date_dict[1]);
+        labelTimeCreationForCabinet('tuesday_time', date_dict[2]);
+        labelTimeCreationForCabinet('wednesday_time', date_dict[3]);
+        labelTimeCreationForCabinet('thursday_time', date_dict[4]);
+        labelTimeCreationForCabinet('friday_time', date_dict[5]);
+        labelTimeCreationForCabinet('saturday_time', date_dict[6]);
+        labelTimeCreationForCabinet('sunday_time', date_dict[7]);
+
+        booked_weekdays = {% autoescape off %}{{ booked_weekdays }}{% endautoescape %};
+
+        ID_DICT = {'8:00-9:00': 1,
+               '9:00-10:00': 2,
+               '10:00-11:00': 3,
+               '11:00-12:00': 4,
+               '12:00-13:00': 5,
+               '13:00-14:00': 6,
+               '14:00-15:00': 7,
+               '15:00-16:00': 8,
+               '16:00-17:00': 9,
+               '17:00-18:00': 10,
+               '18:00-19:00': 11,
+               '19:00-20:00': 12,
+               '20:00-21:00': 13,
+               };
+
+
+        labelWeekdaysAndBooked(booked_weekdays, date_dict, ID_DICT);
+        function labelWeekdaysAndBooked(booked_weekdays, date_dict, ID_DICT){
+            for (let key in date_dict) {
+                let day_date = date_dict[key];
+                let time_dict = booked_weekdays[day_date];
+
+                if (time_dict !== undefined) {
+                    for (key_time in time_dict) {
+                        let id_element = '' + day_date +'_'+ ID_DICT[key_time];
+                        document.getElementById(`${id_element}`).style.color = "white";
+                        document.getElementById(`${id_element}`).style.background = "aquamarine";
+                        document.getElementById(`${id_element}`).innerHTML = `<a href="/private_lesson_view/${time_dict[key_time]}/">Заняття</a>`;
+                    }
+
+                }
+            }
+        }
+    </script>
+
+{% endblock %}

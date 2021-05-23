@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Прогрес {{ progress|get_names_by_progress }}{% endblock %}
+
+{% block content %}
+    <div>
+        <h3>{{ progress|get_names_by_progress }}</h3>
+        <p>Курс: "{{ course.title }}"</p>
+    </div>
+
+
+    <div>
+        <p>Всього пройдено уроків: {{ progress|percent_passed_lessons }}%</p>
+        <p>Всього поінтів зароблено: {{ progress.points }}</p>
+    </div>
+
+     <div>
+         <p><a href="{% url 'all_private_lessons_in_course_by_parent' pid=progress.id %}">{{ lesson.title }}</a></p>
+         <p><a href="{% url 'buy_course_by_parent_student' cid=course.id sid=student.id %}"></a>Продовжити підписку</p>
+         <p><a href="{% url 'buy_additional_private_lessons_by_parent' cid=course.id sid=student.id %}">Придбати додаткові індивідуальні уроки з Тьютором</a></p>
+     </div>
+
+{% endblock %}

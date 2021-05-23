@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Оплата курсу{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Оплата курсу</h2>
+        <h2>Назва курсу: {{ course.title }}</h2>
+        <p>Ціна за 1 місяць: {{ course.price }} грн</p>
+        <p>Course id: {{ course.id }}(test)</p>
+    </div>
+
+    <p>Оберіть студента для якого Ви купуєте курс:</p>
+
+    <div>
+        <table border="1">
+            <tr>
+                <th>Студент</th>
+                <th>Статус навчання на курсі</th>
+                <th>Дата завершення підписки</th>
+                <th>Обрати студента</th>
+            </tr>
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.profile.user.first_name }} {{ student.profile.user.last_name }}</td>
+                    <td>{{ student|status_student_in_course:course.id }}</td>
+                    <td>{{ student|end_sub_date:course.id }}</td>
+                    <td><a href="{% url 'buy_course_by_parent_student' cid=course.id sid=student.id  %}">Обрати</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <p>Пояснення щодо статусу:
+            Активний - студент зараз проходить даний курс
+            Пауза - студент проходив даний курс, але у нього закінчилась підписка
+            Не активний - студент ніколи не проходив даний курс
+        </p>
+    </div>
+
+{% endblock %}

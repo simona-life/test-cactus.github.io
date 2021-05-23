@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}Прогрес {{ progress|get_names_by_progress }}{% endblock %}
+
+{% block content %}
+
+
+    <div>
+        <p>Всього пройдено уроків: {{ progress|percent_passed_lessons }}%</p>
+        <p>Всього поінтів зароблено: WILL BE</p>
+    </div>
+
+    <div>
+        <h5>Курс: "{{ course.title }}"</h5>
+        <ul>
+            {% for topic in course.topics.all %}
+                <li>{{ topic.title }}</li>
+                    {#   Lessons topic:   #}
+                <ul>
+                    {% for lesson in topic.lessons.all %}
+                        <form action="." method="post">
+                            {% csrf_token %}
+
+                            {% if lesson.type_lesson == 'home_work' or lesson.type_lesson == 'control_work' %}
+                                <li><a href="{% url 'result_hw_lesson' sid=progress.student_fk.id lid=lesson.id %}">{{ lesson.title }}</a>
+                            {% else %}
+                                <li><a href="{% url 'lesson' cid=course.id lid=lesson.id %}">{{ lesson.title }}</a>
+                            {% endif %}
+
+                            <input type="hidden" value="{{ lesson.id }}" name="lesson">
+                            {% if progress|open_check_lesson:lesson.id %}
+                                <input type="submit" name="action" value="Закрити доступ">
+                            {% else %}
+                                <input type="submit" name="action" value="Відкрити доступ">
+                            {% endif %}</li>
+                        </form>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <table border="1">
+            <tr>
+                <th>Юзернейм студента</th>
+                <th>Ім'я Призвище</th>
+                <th>ID курса</th>
+                <th>Курс</th>
+                <th>Тьютор</th>
+            </tr>
+            <tr>
+                <td>{{ progress|get_username_by_progress }}</td>
+                <td>{{ progress|get_names_by_progress }}</td>
+                <td>{{ progress.id_course }}</td>
+                <td>{{ progress.id_course|get_title_course_by_id }}</td>
+                {% if tutor == None %}
+                    <th>Тьютор відсутній!</th>
+                {% else %}
+                    <td>ID:{{ tutor.id }} {{ tutor.profile.user.first_name }} {{ tutor.profile.user.last_name }}</td>
+                {% endif %}
+            </tr>
+        </table>
+
+        {% if tutor == None %}
+            <form action="." method="post">
+                {% csrf_token %}
+                <input list="all tutors" name="tutor" placeholder="Оберіть Тьютора">
+                <datalist id="all tutors">
+                    {% for tutor in tutors %}
+                        {% if tutor.chose_qty_students > tutor|current_qty_tutor_students %}
+                            <option>ID:{{ tutor.id }} {{ tutor.profile.user.first_name }} {{ tutor.profile.user.last_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </datalist>
+                <input type="submit" value="Призначити Тьютора">
+            </form>
+        {% else %}
+            <form action="." method="post">
+                {% csrf_token %}
+                <p>Якщо Ви хочете переназначити Тьютора зі своїх Тьюторів, скористайтесь кнопкою "Назначити іншого Тьютора",
+                в іншому випадку Тьютор буде назначений системаю, у випадку наявності вільних Тьюторів.</p>
+                <input name="tutor" type="hidden" value="{{ tutor_id }}">
+                <input type="submit" value="Призначити іншого Тьютора">
+                <input type="submit" value="Призначити іншого Тьютора системою">
+            </form>
+        {% endif %}
+    </div>
+
+{% endblock %}

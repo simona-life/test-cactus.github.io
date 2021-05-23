@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Create an account{% endblock %}
+
+{% block content %}
+    <h1>Створити обліковий запис:</h1>
+    <p>Будь ласка, заповніть форму нижче для реєстрації:</p>
+
+    <form action="." method="post">
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        {{ captcha_form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Зареєструватись"></p>
+     </form>
+{% endblock %}

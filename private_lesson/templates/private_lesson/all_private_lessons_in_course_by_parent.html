@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Індивідуальні уроки Студента{% endblock %}
+
+{% block content %}
+    <h1>Усі індивідуальні уроки Студента:</h1>
+
+    {% for lesson in all_lessons %}
+        <div>
+            {% if lesson.video_lesson %}
+                <div>
+                    <p>Студент: {{ lesson.student_fk.profile.user.first_name }} {{ lesson.student_fk.profile.user.last_name }}</p>
+                    <p>Дата уроку: {{ lesson.lesson_date }}</p>
+                    <p>Статус перевірки заняття:
+                        {% if lesson.checked_by_head_teacher %}
+                            перевірено
+                        {% else %}
+                            не перевірено (Ви поки не зможете подивитись звіт та відео з заняття)
+                        {% endif %}
+                    </p>
+                    <p><a href="{% url 'result_private_lesson_view_by_parent' lid=lesson.id pid=lesson.progress_fk.id %}">Детальніше</a></p>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+{% endblock %}

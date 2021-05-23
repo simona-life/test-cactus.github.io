@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load mathfilters %}
+
+{% block title %}Оплата курсу{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Оплата курсу</h2>
+        <h2>Назва курсу: {{ course.title }}</h2>
+        <p>Ціна за 1 місяць: {{ course.price }} грн</p>
+    </div>
+
+    <div>
+        <p>Студент: {{ student.profile.user.first_name }} {{ student.profile.user.last_name }}</p>
+    </div>
+
+     <div>
+        <form action=".." method="post">
+            {% csrf_token %}
+            <p style="background: #6DDCBD">Оберіть кількість додаткових індивідуальних уроків:</p>
+
+            <input type="radio" id="typeSubChoice1" name="count_lessons" value="1">
+            <label for="typeSubChoice1">1 урок</label>
+
+            <input type="radio" id="typeSubChoice2" name="count_lessons" value="3" checked>
+            <label for="typeSubChoice2">3 уроки</label>
+
+            <input type="radio" id="typeSubChoice3" name="count_lessons" value="6">
+            <label for="typeSubChoice3">6 уроків</label>
+
+            <p id="show-price">Всього до сплати: {{ course.price_private_lesson|mul:3 }} грн</p>
+
+            <input type="submit" name="action" value="Оплатити (успіх)">
+            <input type="submit" name="action" value="Оплатити (поразка)">
+        </form>
+    </div>
+
+    <script>
+        {#  price generating for template ParentForm #}
+        let buy_el1 = document.getElementById('typeSubChoice1');
+        let buy_el2 = document.getElementById('typeSubChoice2');
+        let buy_el3 = document.getElementById('typeSubChoice3');
+
+        buy_el1.addEventListener('click', formPriceFunction);
+        buy_el2.addEventListener('click', formPriceFunction);
+        buy_el3.addEventListener('click', formPriceFunction);
+
+
+        {# create UTP for 3 month and 6 month #}
+        function formPriceFunction(){
+            let buy_el1 = document.getElementById('typeSubChoice1');
+            let buy_el2 = document.getElementById('typeSubChoice2');
+            let buy_el3 = document.getElementById('typeSubChoice3');
+
+            if(buy_el1.checked) {
+                document.getElementById("show-price").innerHTML = "Всього до сплати: {{ course.price|mul:1 }} грн"
+            }else if(buy_el2.checked){
+                document.getElementById("show-price").innerHTML = "Всього до сплати: {{ course.price|mul:3 }} грн"
+            }else if(buy_el3.checked){
+                document.getElementById("show-price").innerHTML = "Всього до сплати: {{ course.price|mul:6 }} грн"
+            }else {
+            }
+        }
+    </script>
+{% endblock %}

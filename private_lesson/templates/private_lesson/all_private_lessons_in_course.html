@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Індивідуальні заняття{% endblock %}
+
+{% block content %}
+    {% if all_lessons != 0 %}
+        <h5>Заплановані уроки:</h5>
+        {% for lesson in all_lessons %}
+            <div>
+                {% if lesson.lesson_date > today_date %}
+                    <div>
+                        <p>Студент: {{ lesson.student_fk.profile.user.first_name }} {{ lesson.student_fk.profile.user.last_name }}</p>
+                        <p>Дата уроку: {{ lesson.lesson_date }}</p>
+                        <p><a href="{% url 'private_lesson_view' lid=lesson.id %}">Деталі</a></p>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+        <h5>Індивідуальні заняття:</h5>
+
+            {% for lesson in all_lessons %}
+                <div>
+                    <p>Дата проведення: {{ lesson.lesson_date }}</p>
+                    <p>Час проведення: {{ lesson.lesson_time }}</p>
+                    <p><a href="{% url 'private_lesson_view' lid=lesson.id %}">Повний звіт</a></p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Поки не було проведено та заплановано жодного заняття.</p>
+    {% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load my_filters %}
+
+{% block title %}{{ lesson.title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ lesson.title }}</h1>
+
+    <div>
+        <h2>{{ lesson.title }}</h2>
+        <p>id: {{ lesson.id }}</p>
+    </div>
+
+    <div>
+        {% for content in contents %}
+            {% if content.item|model_name == 'Text' %}
+                <p>{{content.item.title}}:{{content.item.text}}</p>
+                <p>
+            {% elif content.item|model_name == 'Image'%}
+                <p>
+                <img src="{{ content.item.file.url }}" width="189" height="255">
+            {% elif content.item|model_name == 'Video'%}
+                <p>
+                <video controls="controls">
+                    <source src="{{ content.item.file.url }}" type="video/mp4">
+                </video>
+            {% elif content.item|model_name == 'File'%}
+                <p><a download href="{{ content.item.file.url }}">{{ content.item.title }} download</a>
+                <p><a href="{{ content.item.file.url }}">{{ content.item.title }} open</a>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+
+
+    {% if lesson.type_lesson == 'home_work' or lesson.type_lesson == 'control_work' %}
+        <div>
+            <form action="." method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for question in questions %}
+                    <p> {{ question.title }}
+                        A<input type="radio" id="choice_a" value="A" name="choice_question_{{ question.id }}" required>
+                        B<input type="radio" id="choice_b" value="B" name="choice_question_{{ question.id }}" required>
+                        C<input type="radio" id="choice_c" value="C" name="choice_question_{{ question.id }}" required>
+                        D<input type="radio" id="choice_d" value="D" name="choice_question_{{ question.id }}" required>
+                    </p>
+                {% endfor %}
+                <p>Прикріпіть фото Вашої виконаної роботи нижче:</p>
+                <p><input type="file" name="photo" accept="image/*,image/jpeg" multiple></p>
+
+                <input type="submit" name="action" value="Відправити">
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}
